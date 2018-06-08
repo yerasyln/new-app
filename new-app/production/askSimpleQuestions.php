@@ -288,7 +288,17 @@ if(empty($questionsCount)){
 								class="dropdown-toggle"  data-toggle="dropdown"
 								aria-expanded="false">
 
-                <img src="images/logo-nomad.png" style="width: 75%;" alt="">
+
+
+
+                <?php if(!empty($company_id) && $company_id==2): ?>
+                                <img src="https://www.eubank.kz/images/logo.png" style="width: 75%;" alt="">
+                <?php endif ?>
+
+
+                <?php if(!empty($company_id) && $company_id==5): ?>
+                                  <img src="images/logo-nomad.png" style="width: 75%;" alt="">
+                <?php endif ?>
 
 							</a>
 
@@ -571,6 +581,8 @@ if(empty($questionsCount)){
             var phone_number = $('#phone_number').text();
             var questionCount = parseInt($('#lastComment').text().trim());
 
+            let company_id = <?php echo $company_id?>;
+
             if (answer.replace(/\s/g,"") == "") {
                 return false;
             }
@@ -586,7 +598,7 @@ if(empty($questionsCount)){
                     function (data, status) {
                         if (data == 6) {
                           console.log(data+" answer is ");
-                            window.location.replace("../production/finishquestions.php");
+                            window.location.replace("../production/finishquestions.php?company_id="+company_id);
                         }
                     });
         }

@@ -137,81 +137,81 @@ require 'php/areaAmcharts.php';
 
         </tr>
     </table>
+        <div class="col-md-2 col-sm-12 col-xs-12 form-group">
+<label> Длительность <br>обслуживания(Мин):</label>
+<?php if(isset($_GET['duration_of_serviceStart'])):?>
+<input type="number" autocomplete="off"  placeholder="с" class="form-control" value="<?php echo $_GET['duration_of_serviceStart'];?>" name="duration_of_serviceStart"/>
+<?php else:?>
+<input type="number" autocomplete="off"  placeholder="с" class="form-control" name="duration_of_serviceStart"/>
+<?php endif;?>
+<br>
+<?php if(isset($_GET['duration_of_serviceEnd'])):?>
+<input type="number" autocomplete="off"  placeholder="с" class="form-control" value="<?php echo $_GET['duration_of_serviceEnd'];?>" name="duration_of_serviceEnd"/>
+<?php else:?>
+<input type="number" autocomplete="off" placeholder="по" class="form-control" name="duration_of_serviceEnd"/>
+<?php endif;?>
+</div>
                 <div class="col-md-2 col-sm-12 col-xs-12 form-group">
-                          <label> Длительность <br>обслуживания(Мин):</label>
-                          <?php if(isset($_GET['duration_of_serviceStart'])):?>
-                          <input type="number" autocomplete="off"  placeholder="с" class="form-control" value="<?php echo $_GET['duration_of_serviceStart'];?>" name="duration_of_serviceStart"/>
-                          <?php else:?>
-                          <input type="number" autocomplete="off"  placeholder="с" class="form-control" name="duration_of_serviceStart"/>
-                          <?php endif;?>
-                          <br>
-                          <?php if(isset($_GET['duration_of_serviceEnd'])):?>
-                          <input type="number" autocomplete="off"  placeholder="с" class="form-control" value="<?php echo $_GET['duration_of_serviceEnd'];?>" name="duration_of_serviceEnd"/>
-                          <?php else:?>
-                          <input type="number" autocomplete="off" placeholder="по" class="form-control" name="duration_of_serviceEnd"/>
-                          <?php endif;?>
-                </div>
-                <div class="col-md-2 col-sm-12 col-xs-12 form-group">
-                        <label>Жизнь клиента <br>(мес):</label>
-                        <?php if(isset($_GET['servicetimeStart'])):?>
-                        <input type="number" autocomplete="off"  placeholder="с" class="form-control" value="<?php echo $_GET['servicetimeStart'];?>" name="servicetimeStart"/>
-                        <?php else:?>
-                        <input type="number" autocomplete="off"  placeholder="с" class="form-control" name="servicetimeStart"/>
-                        <?php endif;?>
-                        <br>
-                        <?php if(isset($_GET['servicetimeEnd'])):?>
-                        <input type="number"  autocomplete="off"  placeholder="с" class="form-control" value="<?php echo $_GET['servicetimeEnd'];?>" name="servicetimeEnd"/>
-                        <?php else:?>
-                        <input type="number" autocomplete="off" placeholder="по" class="form-control" name="servicetimeEnd"/>
-                        <?php endif;?>
-                </div>
+<label>Жизнь клиента <br>(мес):</label>
+<?php if(isset($_GET['servicetimeStart'])):?>
+<input type="number" autocomplete="off"  placeholder="с" class="form-control" value="<?php echo $_GET['servicetimeStart'];?>" name="servicetimeStart"/>
+<?php else:?>
+<input type="number" autocomplete="off"  placeholder="с" class="form-control" name="servicetimeStart"/>
+<?php endif;?>
+<br>
+<?php if(isset($_GET['servicetimeEnd'])):?>
+<input type="number"  autocomplete="off"  placeholder="с" class="form-control" value="<?php echo $_GET['servicetimeEnd'];?>" name="servicetimeEnd"/>
+<?php else:?>
+<input type="number" autocomplete="off" placeholder="по" class="form-control" name="servicetimeEnd"/>
+<?php endif;?>
+</div>
 
-                <div class="col-md-2 col-sm-12 col-xs-12 form-group">
-                        <label>Количество <br>транзакций:</label>
-                        <?php if(isset($_GET['transactionsStart'])):?>
-                        <input type="number" autocomplete="off"  placeholder="с" class="form-control" value="<?php echo $_GET['transactionsStart'];?>" name="transactionsStart"/>
-                        <?php else:?>
-                        <input type="number" autocomplete="off"  placeholder="с" class="form-control" name="transactionsStart"/>
-                        <?php endif;?>
-                        <br>
-                        <?php if(isset($_GET['transactionsEnd'])):?>
-                        <input type="number" autocomplete="off"  placeholder="с" class="form-control" value="<?php echo $_GET['transactionsEnd'];?>" name="transactionsEnd"/>
+    <div class="col-md-2 col-sm-12 col-xs-12 form-group">
+<label>Количество <br>транзакций:</label>
+<?php if(isset($_GET['transactionsStart'])):?>
+<input type="number" autocomplete="off"  placeholder="с" class="form-control" value="<?php echo $_GET['transactionsStart'];?>" name="transactionsStart"/>
+<?php else:?>
+<input type="number" autocomplete="off"  placeholder="с" class="form-control" name="transactionsStart"/>
+<?php endif;?>
+<br>
+<?php if(isset($_GET['transactionsEnd'])):?>
+<input type="number" autocomplete="off"  placeholder="с" class="form-control" value="<?php echo $_GET['transactionsEnd'];?>" name="transactionsEnd"/>
 
-                        <?php else:?>
-                        <input type="number" autocomplete="off" placeholder="по" class="form-control" name="transactionsEnd"/>
+<?php else:?>
+<input type="number" autocomplete="off" placeholder="по" class="form-control" name="transactionsEnd"/>
 
-                            <?php endif;?>
-                </div>
+    <?php endif;?>
+</div>
 
 
-                <div class="col-md-2 col-sm-12 col-xs-12 form-group">
-                        <label> Возраст: <br><br></label>
-                        <?php if(isset($_GET['ageStart'])):?>
-                        <input type="number" autocomplete="off"  placeholder="с" class="form-control" value="<?php echo $_GET['ageStart'];?>" name="ageStart"/>
-                        <?php else:?>
-                        <input type="number" autocomplete="off" placeholder="с" class="form-control" name="ageStart"/>
-                        <?php endif;?>
-                        <br>
-                        <?php if(isset($_GET['ageEnd'])):?>
-                        <input type="number" autocomplete="off"  placeholder="с" class="form-control" value="<?php echo $_GET['ageEnd'];?>" name="ageEnd"/>
-                        <?php else:?>
-                        <input type="number" autocomplete="off" placeholder="по" class="form-control" name="ageEnd"/>
-                        <?php endif;?>
-                </div>
+    <div class="col-md-2 col-sm-12 col-xs-12 form-group">
+<label> Возраст: <br><br></label>
+<?php if(isset($_GET['ageStart'])):?>
+<input type="number" autocomplete="off"  placeholder="с" class="form-control" value="<?php echo $_GET['ageStart'];?>" name="ageStart"/>
+<?php else:?>
+<input type="number" autocomplete="off" placeholder="с" class="form-control" name="ageStart"/>
+<?php endif;?>
+<br>
+<?php if(isset($_GET['ageEnd'])):?>
+<input type="number" autocomplete="off"  placeholder="с" class="form-control" value="<?php echo $_GET['ageEnd'];?>" name="ageEnd"/>
+<?php else:?>
+<input type="number" autocomplete="off" placeholder="по" class="form-control" name="ageEnd"/>
+<?php endif;?>
+</div>
 
-                <div class="col-md-2 col-sm-12 col-xs-12 form-group">
-                                <label for="gender"> Пол:</label><br><br>
-                            <select id="gender" name="gender" class="form-control">
-                                    <option value="">Выбрать</option>
-                                    <?php foreach($filters->getGender() as $data): ?>
-                                <?php if($_GET['gender']==$data['id']):?>
-                                <option value="<?php echo $data['id'];?>" selected><?php echo $data['name'];?></option>
-                                     <?php else:?>
-                                <option value="<?php echo $data['id'];?>"><?php echo $data['name'];?></option>
-                                     <?php endif;?>
-                                <?php endforeach; ?>
-                            </select>
-                  </div>
+    <div class="col-md-2 col-sm-12 col-xs-12 form-group">
+    <label for="gender"> Пол:</label><br><br>
+<select id="gender" name="gender" class="form-control">
+    <option value="">Выбрать</option>
+    <?php foreach($filters->getGender() as $data): ?>
+<?php if($_GET['gender']==$data['id']):?>
+<option value="<?php echo $data['id'];?>" selected><?php echo $data['name'];?></option>
+     <?php else:?>
+<option value="<?php echo $data['id'];?>"><?php echo $data['name'];?></option>
+     <?php endif;?>
+<?php endforeach; ?>
+</select>
+</div>
 <div class="col-md-12 col-sm-12 col-xs-12 form-group" align="right">
 <input type="submit" class="btn btn-danger btn-sm" value="Применить">
 </div>
@@ -224,26 +224,27 @@ require 'php/areaAmcharts.php';
 </div>
 <!-- Filtr end-->
 
-            <div class="col-md-3 col-sm-3">
+
+
+
+            <div class="col-sm-7 col-sm-3">
                 <div class="tile-stats">
                     <div class="icon">
                         <i class="fa fa-comments-o"></i>
                     </div>
-
-
-
-
-                    <div class="count"><?php echo !empty($total_question[1]['col_count'])? $total_question[1]['col_count']:"0"; ?></div>
-                    <p>
+        <div class="count"><?php echo !empty($total_question[1]['col_count'])? $total_question[1]['col_count']:"0"; ?></div>
+        <p>
 					<?php if(!empty($total_question[1]['col_count'])): ?>
-                        <a href="../production/csatre.php?question=1"  target="_blank" ><b>(<?php echo !empty($total_question[1]['title'])? $total_question[1]['title']:""; ?>)</b></a>
-					<?php endif; ?>
+
+                        <a href="../production/csatre.php?question=1<?php echo $url; ?>"  target="_blank" ><b>(<?php echo !empty($total_question[1]['title'])? $total_question[1]['title']:""; ?>)</b></a>
+
+          <?php endif; ?>
 					</p>
 
 
                 </div>
             </div>
-            <div class="col-md-3 col-sm-3 ">
+            <div class="col-sm-7 col-sm-3">
                 <div class="tile-stats">
                     <div class="icon">
                         <i class="fa fa-comments-o"></i>
@@ -251,13 +252,13 @@ require 'php/areaAmcharts.php';
                     <div class="count"><?php echo  !empty($total_question[2]['col_count'])? $total_question[2]['col_count']:"0"; ?></div>
                     <p>
 					<?php if(!empty($total_question[2]['col_count'])): ?>
-                        <a href="../production/questionDetail.php?question=2"  target="_blank" ><b>(<?php echo !empty($total_question[2]['title'])? $total_question[2]['title']:""; ?>)</b></a>
+                        <a href="../production/questionDetail.php?question=2<?php echo $url; ?>"  target="_blank" ><b>(<?php echo !empty($total_question[2]['title'])? $total_question[2]['title']:""; ?>)</b></a>
                      <?php endif; ?>
 					</p>
 
                 </div>
             </div>
-            <div class="col-md-3 col-sm-3 ">
+            <div class="col-sm-7 col-sm-3">
                 <div class="tile-stats">
                     <div class="icon">
                         <i class="fa fa-comments-o"></i>
@@ -265,13 +266,13 @@ require 'php/areaAmcharts.php';
                     <div class="count"><?php echo !empty($total_question[3]['col_count'])? $total_question[3]['col_count']:"0"; ?></div>
                     <p>
 					<?php if(!empty($total_question[3]['col_count'])): ?>
-                        <a href="../production/questionDataView.php?question=3" target="_blank" ><b>(<?php echo !empty($total_question[3]['title'])?$total_question[3]['title']:""; ?>)</b></a>
+                        <a href="../production/questionDataView.php?question=3<?php echo $url; ?>" target="_blank" ><b>(<?php echo !empty($total_question[3]['title'])?$total_question[3]['title']:""; ?>)</b></a>
                     <?php endif; ?>
 					</p>
 
                 </div>
             </div>
-            <div class="col-md-3 col-sm-3 ">
+          <div class="col-sm-7 col-sm-3">
                 <div class="tile-stats">
                     <div class="icon">
                         <i class="fa fa-comments-o"></i>
@@ -279,21 +280,23 @@ require 'php/areaAmcharts.php';
                     <div class="count"><?php echo !empty($total_question[4]['col_count'])?$total_question[4]['col_count']:"0"; ?></div>
                     <p>
 					<?php if(!empty($total_question[4]['col_count'])): ?>
-                        <a href="../production/questionDataView.php?question=4" target="_blank" ><b>(<?php echo !empty($total_question[4]['title']) ?$total_question[4]['title']:""; ?>)</b></a>
+                        <a href="../production/questionDataView.php?question=4<?php echo $url; ?>" target="_blank" ><b>(<?php echo !empty($total_question[4]['title']) ?$total_question[4]['title']:""; ?>)</b></a>
 					<?php endif; ?>
 					</p>
 
                 </div>
             </div>
-<!-- 
-            <div class="col-md-15 col-sm-3 ">
+
+            <!-- <div class="col-md-15 col-sm-3 ">
                 <div class="tile-stats">
                     <div class="icon">
                         <i class="fa fa-comments-o"></i>
                     </div>
                     <div class="count"><?php echo !empty($total_question[5]['col_count']) ?$total_question[5]['col_count']:"0"; ?></div>
                     <p>
-						
+						<?php if(!empty($total_question[5]['col_count'])): ?>
+                        <a href="../production/questionDataView.php?question=5<?php echo $url; ?>" target="_blank" ><b>(<?php echo !empty($total_question[5]['title'])?$total_question[5]['title']:""; ?>)</b></a>
+						<?php endif; ?>
 					</p>
 
                 </div>
@@ -346,7 +349,7 @@ require 'php/areaAmcharts.php';
  <?php if($changeStatuscall_office!=0):   ?>  class="fa fa-sort-desc"    <?php else: ?>  class="fa fa-sort-asc"  <?php endif; ?>   ></i><?php  echo isset($office_nps['office']['rate'])? $office_nps_last_week['office']['rate']:"";  ?> </i> На прошлой неделе</span>
 
         </div>
-		
+
         <div class="col-sm-2 tile_stats_count" style="width: 14%;">
             <span class="count_top"><i class="fa fa-user"></i> NPS техподдержки</span>
             <div class="count"><?php  echo isset($help_desk_nps['help_desk']['rate'])? round($help_desk_nps['help_desk']['rate'],2):"0%";  ?></div>
@@ -570,7 +573,7 @@ require 'php/areaAmcharts.php';
                 </div>
                 <div class="x_content2">
              <div style="width: 100%; height: 400px; background-color: #FFFFFF;" >
-                   
+
                    <p>
                       	<b><?php echo 'Call Center'; ?>&nbsp;&nbsp;</b>
 					</p>
@@ -581,7 +584,7 @@ require 'php/areaAmcharts.php';
                   </div>
 
                    <p><b><?php echo  isset($call_center_nps['call-center']['rate'])? round($call_center_nps['call-center']['rate'],2)."%":"0%";  ?></b></p>
-				   
+
 				    <p>
                       	<b><?php echo 'офис продаж'; ?>&nbsp;&nbsp;</b>
 					</p>
@@ -592,7 +595,7 @@ require 'php/areaAmcharts.php';
                   </div>
 
                    <p><b><?php echo  isset($office_nps['office']['rate'])? round($office_nps['office']['rate'],2)."%":"0%";  ?></b></p>
-				   
+
 				    <p>
                       	<b><?php echo 'техподдержка'; ?>&nbsp;&nbsp;</b>
 					</p>
@@ -603,7 +606,7 @@ require 'php/areaAmcharts.php';
                   </div>
 
                    <p><b><?php echo  isset($help_desk_nps['help_desk']['rate'])? round($help_desk_nps['help_desk']['rate'],2)."%":"0%";  ?></b></p>
-             
+
 
                  <div id="progress_export" style="display: none;">
                       <table class="table">
@@ -805,12 +808,12 @@ $(function() {
 
 	var new_map = [];
 
-	
+
     for( var i in map ) {
 	    if (map.hasOwnProperty(i)){
 
 			if(map[i]['code']){
-				
+
 				new_map.push(map[i]['code']);
 			}
 
@@ -822,7 +825,7 @@ $(function() {
 		}
 	}
 
-   
+
 
 
 	 var arr = <?php echo json_encode($result_data_point); ?>

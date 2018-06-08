@@ -44,7 +44,7 @@ if (isset($_GET['question'])) {
         echo "0 results";
     }
   }
-$conn->next_result();
+
 
 
     $array_bad = array();
@@ -59,60 +59,63 @@ $conn->next_result();
 
 
 
-    $sql_count_for_per_questions = "select
-	count( main.answer ) as total,
-	(
-		select
-			count( answer )
-		from
-			log_simple_questions
-                join (select distinct(clients_contact.phone),clients_contact.company_id  from clients_contact ) cc on
-			cc.phone = phone_number
-		join company on
-			company.id = cc.company_id
+   $sql_count_for_per_questions = "select
+    count( main.answer ) as total,
+    (
+        select
+            count( answer )
+        from
+            log_simple_questions
+                join (select distinct(clients_contact.phone),clients_contact.company_id,clients_contact.stage_id,clients_contact.product_id   from clients_contact ) cc on
+            cc.phone = phone_number
+        join company on
+            company.id = cc.company_id
 
-		where
+        where
       cc.company_id = $company_id
       and
-			answer <= 6
-			and question_quee = main.question_quee
+            answer <= 6
+            and question_quee = main.question_quee
+            $filter
 
-	) as bad,
-	(
-		select
-			count( answer )
-		from
-			log_simple_questions
-    join (select distinct(clients_contact.phone),clients_contact.company_id  from clients_contact ) cc on
-			cc.phone = phone_number
-		join company on
-			company.id = cc.company_id
-		where
+    ) as bad,
+    (
+        select
+            count( answer )
+        from
+            log_simple_questions
+    join (select distinct(clients_contact.phone),clients_contact.company_id,clients_contact.stage_id,clients_contact.product_id  from clients_contact ) cc on
+            cc.phone = phone_number
+        join company on
+            company.id = cc.company_id
+        where
       cc.company_id = $company_id
       and
-			answer between 7 and 8
-			and question_quee = main.question_quee
+            answer between 7 and 8
+            and question_quee = main.question_quee
+            $filter
 
-	) as good,
-	(
-		select
-			count( answer )
-		from
-			log_simple_questions
-    join (select distinct(clients_contact.phone), clients_contact.company_id  from clients_contact ) cc on
-			cc.phone = phone_number
-		join company on
-			company.id = cc.company_id
-		where
+    ) as good,
+    (
+        select
+            count( answer )
+        from
+            log_simple_questions
+    join (select distinct(clients_contact.phone), clients_contact.company_id,clients_contact.stage_id,clients_contact.product_id  from clients_contact ) cc on
+            cc.phone = phone_number
+        join company on
+            company.id = cc.company_id
+        where
       cc.company_id = $company_id
       and
-			answer >= 9
-			and question_quee = main.question_quee
+            answer >= 9
+            and question_quee = main.question_quee
+            $filter
 
-	) as well
+    ) as well
 from
-	log_simple_questions main
-        join (select distinct(clients_contact.phone),clients_contact.company_id  from clients_contact ) cc on
+    log_simple_questions main
+        join (select distinct(clients_contact.phone),clients_contact.company_id,clients_contact.stage_id,clients_contact.product_id from clients_contact ) cc on
               cc.phone = main.phone_number
         join company on
               company.id = cc.company_id
@@ -120,7 +123,8 @@ from
 where
   cc.company_id = $company_id
   and
-	main.question_quee = ".$question_id ;
+    main.question_quee = ".$question_id ."".$filter ;
+
 
 //  $sql_count_for_per_questions = "select * from clients_contact";
 
@@ -171,25 +175,25 @@ where
 
 	 $sql = "select
             (
-		select
-			count(*)
-		from
-			log_simple_questions l join clients_contact cc on
-			cc.phone = l.phone_number join point_of_interaction poi on
-			poi.id = cc.point_of_interaction
-			where cc.company_id = $company_id and l.question_quee=2 $filter
-	) as total,
-	count( l.answer ) col,
-	poi.name,
-        poi.code
+        select
+            count(*)
+        from
+            log_simple_questions l join clients_contact cc on
+            cc.phone = l.phone_number join point_of_interaction poi on
+            poi.id = cc.point_of_interaction
+            where cc.company_id = $company_id and l.question_quee=2 $filter
+    ) as total,
+    count( l.answer ) col,
+    poi.name,
+        poi.code,cc.product_id,cc.stage_id
 from
-	log_simple_questions l join clients_contact cc on
-	cc.phone = l.phone_number join point_of_interaction poi on
-	poi.id = cc.point_of_interaction
-	where cc.company_id = $company_id and l.question_quee=2  $filter
+    log_simple_questions l join clients_contact cc on
+    cc.phone = l.phone_number join point_of_interaction poi on
+    poi.id = cc.point_of_interaction
+    where cc.company_id = $company_id and l.question_quee=2  $filter
 group by
-	poi.name
-	";
+    poi.name
+    ";
 
       $res = $conn->query($sql);
       $ConnectionDot_arr = array();
@@ -370,91 +374,107 @@ if (!empty($_POST['start']) && !empty($_POST['end'])){
     $end = $_POST['end'];
 
 
+ $getParam = !empty($_POST['getParam'])? json_decode($_POST['getParam']):"";
+
+
+    $filter="";
+
+    if(!empty($getParam->product_id)){
+        $filter=" and cc.product_id = ".$getParam->product_id;
+    }
+
+    if(!empty($getParam->stage_id)){
+        $filter.=" and cc.stage_id = ".$getParam->stage_id;
+    }
+
+
     $sql="  select
 
-		(
-			select
-				count( answer )
-			from
-				log_simple_questions
-	                join (select distinct(clients_contact.phone),clients_contact.company_id  from clients_contact ) cc on
-				cc.phone = phone_number
-			join company on
-				company.id = cc.company_id
-			join map_ref on
-				map_ref.id = company.region
-			where
+        (
+            select
+                count( answer )
+            from
+                log_simple_questions
+                    join (select distinct(clients_contact.phone),clients_contact.company_id, clients_contact.product_id,clients_contact.stage_id  from clients_contact ) cc on
+                cc.phone = phone_number
+            join company on
+                company.id = cc.company_id
+            join map_ref on
+                map_ref.id = company.region
+            where
         cc.company_id = $company_id
         and
-				answer <= 6
-				and question_quee = main.question_quee
-	                        and mm.id = map_ref.id
-	                           and date(main.created_at) = date(created_at)
-		) as bad,
-		(
-			select
-				count( answer )
-			from
-				log_simple_questions
+                answer <= 6
+                and question_quee = main.question_quee
+                            and mm.id = map_ref.id
+                               and date(main.created_at) = date(created_at)
+                               $filter
+        ) as bad,
+        (
+            select
+                count( answer )
+            from
+                log_simple_questions
 
-	                join (select distinct(clients_contact.phone),clients_contact.company_id  from clients_contact ) cc on
-				cc.phone = phone_number
-			join company on
-				company.id = cc.company_id
-			join map_ref on
-				map_ref.id = company.region
+                    join (select distinct(clients_contact.phone),clients_contact.company_id,clients_contact.product_id,clients_contact.stage_id   from clients_contact ) cc on
+                cc.phone = phone_number
+            join company on
+                company.id = cc.company_id
+            join map_ref on
+                map_ref.id = company.region
 
-			where
+            where
         cc.company_id = $company_id
         and
-				answer between 7 and 8
-				and question_quee = main.question_quee
-	                        and mm.id = map_ref.id
-	                           and date(main.created_at) = date(created_at)
-		) as good,
-		(
-			select
-				count( answer )
-			from
-				log_simple_questions
-	                join (select distinct(clients_contact.phone),clients_contact.company_id  from clients_contact ) cc on
-				cc.phone = phone_number
-			join company on
-				company.id = cc.company_id
-			join map_ref on
-				map_ref.id = company.region
+                answer between 7 and 8
+                and question_quee = main.question_quee
+                            and mm.id = map_ref.id
+                               and date(main.created_at) = date(created_at)
+                               $filter
+        ) as good,
+        (
+            select
+                count( answer )
+            from
+                log_simple_questions
+                    join (select distinct(clients_contact.phone),clients_contact.company_id,clients_contact.product_id,clients_contact.stage_id  from clients_contact ) cc on
+                cc.phone = phone_number
+            join company on
+                company.id = cc.company_id
+            join map_ref on
+                map_ref.id = company.region
 
-			where
+            where
         cc.company_id = $company_id
         and
-				answer >= 9
-				and question_quee = main.question_quee
-	                        and mm.id = map_ref.id
-	                   and date(main.created_at) = date(created_at)
-		) as well,
-		date(main.created_at) as date
-		from
-		log_simple_questions main
-	        join (select distinct(clients_contact.phone), clients_contact.company_id  from clients_contact ) cc on
-	              cc.phone = main.phone_number
-	        join company on
-	              company.id = cc.company_id
-	        join map_ref mm on
-	              mm.id = company.region
-	where
+                answer >= 9
+                and question_quee = main.question_quee
+                            and mm.id = map_ref.id
+                       and date(main.created_at) = date(created_at) $filter
+        ) as well,
+        date(main.created_at) as date
+        from
+        log_simple_questions main
+            join (select distinct(clients_contact.phone), clients_contact.company_id, clients_contact.product_id, clients_contact.stage_id   from clients_contact ) cc on
+                  cc.phone = main.phone_number
+            join company on
+                  company.id = cc.company_id
+            join map_ref mm on
+                  mm.id = company.region
+    where
           cc.company_id = $company_id
           and
-		      main.question_quee = 2
+              main.question_quee = 2
 
                 and
                 (date(main.created_at) >= date('$start')
                     and date(main.created_at) <= date('$end')
                 )
 
+                $filter
 
-	group by date(main.created_at)	";
 
-
+    group by date(main.created_at)  ";
 
 
     $queryNPS = $conn->query($sql);

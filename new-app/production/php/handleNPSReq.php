@@ -84,6 +84,18 @@ $gender = $getParam->gender;
 $filter.= " and cc.sex=" . $gender;
 }
 
+if(isset($getParam->product_id) && ! empty($getParam->product_id)){
+$product_id = $getParam->product_id;
+$filter.= " and cc.product_id=" . $product_id;
+}
+
+if(isset($getParam->stage_id) && ! empty($getParam->stage_id)){
+$stage_id = $getParam->stage_id;
+$filter.= " and cc.stage_id=" . $stage_id;
+}
+
+
+
 
 $sql="select
 		count(main.phone_number) as total,
@@ -99,6 +111,7 @@ $sql="select
 			answer <= 6
 			and question_quee = main.question_quee
 			and date(created_at) = date(main.created_at)
+      $filter
 	) as bad,
 	(
 		select
@@ -112,6 +125,7 @@ $sql="select
 			answer between 7 and 8
 			and question_quee = main.question_quee
 				and date(created_at) = date(main.created_at)
+        $filter
 	) as good,
 	(
 		select
@@ -125,6 +139,7 @@ $sql="select
 			answer >= 9
 			and question_quee = main.question_quee
 				and date(created_at) = date(main.created_at)
+        $filter
 	) as well,
 	date(main.created_at) as date
 from
@@ -142,7 +157,7 @@ order by
 	main.created_at
 ";
 
- // echo $sql; die;
+
 
 $res_query = $conn->query($sql);
 
@@ -154,7 +169,7 @@ if($res_query){
 
         while($row = $res_query->fetch_assoc()){
 				$nps = $row['well']-$row['bad'];
-				
+
 				$res_arr[] = array(
 
                 'date' => $row['date'],

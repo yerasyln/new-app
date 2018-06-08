@@ -354,7 +354,7 @@ where main.question_quee = 1 and main.answer in (1,2,3,4,5,6,9,10)";
         $sql = "SELECT
   	main.phone_number,
     mm_main.code,
-	
+
 	(
     SELECT
         COUNT(answer)
@@ -427,12 +427,12 @@ JOIN
     company
 ON
     company.id = cc.company_id
-    
+
 JOIN
     map_ref mm
 ON
-    mm.id = company.region    
-    
+    mm.id = company.region
+
 WHERE
     cc.company_id = $company_id AND mm.id=mm_main.id AND answer >= 9 AND log_simple_questions.question_quee = 2
 ) AS well
@@ -463,7 +463,7 @@ WHERE
         if ($res->num_rows > 0) {
             while ($row = $res->fetch_assoc()) {
 				$nps = (($row['well']*100)/$row['total'])-(($row['bad']*100)/$row['total']);
-					
+
                 $total_res[$row['code']] = array('code'=>$row['code'], 'number'=>$nps);
             }
         }
@@ -517,7 +517,7 @@ from
 group by
 	poi.name
 	";
-	
+
 
         $res = $this->db->query($sql);
         $total_res = array();
@@ -530,11 +530,9 @@ group by
         return $total_res;
     }
 
-    function getTotalCSAT($filter, $company_id) {
+    function getTotalCSAT($filter, $company_id, $filter_sub) {
 
         $sql = "
-
-
 		select
         round(sum(main.answer)/count( main.answer ),2) as arif,
 
@@ -543,7 +541,7 @@ group by
 			 round(sum(main.answer)/count( main.answer ),2) as last_arif
 		from
 			log_simple_questions main join (select distinct(clients_contact.phone),checktitle,clients_contact.sex,clients_contact.channel,clients_contact.point_of_interaction,
-    clients_contact.avgcheck,clients_contact.servicetime,clients_contact.product,clients_contact.duration_of_service,clients_contact.transactions,clients_contact.age, clients_contact.company_id from clients_contact ) cc on
+    clients_contact.avgcheck,clients_contact.servicetime,clients_contact.product,clients_contact.duration_of_service,clients_contact.transactions,clients_contact.age, clients_contact.company_id, clients_contact.product_id, clients_contact.stage_id from clients_contact ) cc on
 			cc.phone = phone_number
 		where
 			question_quee = 1
@@ -552,6 +550,7 @@ group by
 			and date( created_at )<= date(
 				current_date - 7
 			)
+      $filter
 	) as lastweek,
 	if(
 		count( main.answer )<(
@@ -559,7 +558,7 @@ group by
 				count( main.phone_number ) total
 			from
 				log_simple_questions main join (select distinct(clients_contact.phone),checktitle,clients_contact.sex,clients_contact.channel,clients_contact.point_of_interaction,
-    clients_contact.avgcheck,clients_contact.servicetime,clients_contact.product,clients_contact.duration_of_service,clients_contact.transactions,clients_contact.age, clients_contact.company_id from clients_contact ) cc on
+    clients_contact.avgcheck,clients_contact.servicetime,clients_contact.product,clients_contact.duration_of_service,clients_contact.transactions,clients_contact.age, clients_contact.company_id, clients_contact.product_id, clients_contact.stage_id from clients_contact ) cc on
 				cc.phone = phone_number
 			where
 				question_quee = 1
@@ -567,19 +566,22 @@ group by
 				and date( created_at )<= date(
 					current_date - 7
 				)
+        $filter
 		),
 		1,
 		0
 	) as change_status
 from
 	log_simple_questions main join (select distinct(clients_contact.phone),checktitle,clients_contact.sex,clients_contact.channel,clients_contact.point_of_interaction,
-    clients_contact.avgcheck,clients_contact.servicetime,clients_contact.product,clients_contact.duration_of_service,clients_contact.transactions,clients_contact.age, clients_contact.company_id from clients_contact ) cc on
+    clients_contact.avgcheck,clients_contact.servicetime,clients_contact.product,clients_contact.duration_of_service,clients_contact.transactions,clients_contact.age, clients_contact.company_id, clients_contact.product_id, clients_contact.stage_id from clients_contact ) cc on
 	cc.phone = main.phone_number
 where
 	main.question_quee = 1
   and cc.company_id = $company_id
 		$filter
 	";
+
+
 
 
 
@@ -702,7 +704,9 @@ where
         return $result_data_well['well_rate'] - $result_data_bad['bad_rate'];
     }
 
-    function getAllASkedpeople($company_id,$lastweek = false) {
+    function getAllASkedpeople($company_id,$filters, $lastweek = false) {
+
+
 
         if ($lastweek == 1) {
             $filter_sub = " where date( created_at )<= date(
@@ -712,8 +716,8 @@ where
             $filter_sub = " where 1=1";
         }
 
-        $sql = "select  count(*) all_asked from log_send_sms join( select distinct( clients_contact.phone ), clients_contact.company_id from clients_contact ) cc_sub_down on cc_sub_down.phone = log_send_sms.phone_number   $filter_sub and cc_sub_down.company_id = $company_id";
-//echo $sql; die;
+        $sql = "select  count(*) all_asked from log_send_sms join( select distinct( clients_contact.phone ), clients_contact.company_id, clients_contact.product_id, clients_contact.stage_id  from clients_contact ) cc on cc.phone = log_send_sms.phone_number   $filter_sub and cc.company_id = $company_id $filters";
+
         $res = $this->db->query($sql);
         $total_res = array();
         if ($res->num_rows > 0) {
@@ -727,15 +731,14 @@ where
 
 
 
-    function getTotalRespondRate($lastWeek = false,$filter, $company_id){
+    function getTotalRespondRate($lastWeek = false, $filter, $filter_sub, $company_id){
+
 
 
          if ($lastWeek == 1) {
             $filter_sub = " and date( created_at )<= date(
 		current_date - 7
 	) ";
-        } else {
-            $filter_sub = "";
         }
 
         $sql="select
@@ -745,7 +748,8 @@ where
 			count(*)
 		from
 			log_send_sms
-join (select distinct(clients_contact.phone), clients_contact.company_id from clients_contact) cc_sub on
+join (select distinct(clients_contact.phone), clients_contact.company_id, clients_contact.product_id,
+					clients_contact.stage_id from clients_contact) cc_sub on
 cc_sub.phone = log_send_sms.phone_number
                 where  cc_sub.company_id = $company_id
                 $filter_sub
@@ -753,7 +757,8 @@ cc_sub.phone = log_send_sms.phone_number
 from
 	log_send_sms main
 
-  join (select distinct(clients_contact.phone), clients_contact.company_id from clients_contact) cc on
+  join (select distinct(clients_contact.phone), clients_contact.company_id, clients_contact.product_id,
+					clients_contact.stage_id from clients_contact) cc on
   cc.phone = main.phone_number
 where
 	main.phone_number  in(
@@ -767,9 +772,8 @@ where
         $filter
 	)
 and cc.company_id = $company_id
-  $filter_sub";
+  ";
 
-//  echo $sql; die;
         $res = $this->db->query($sql);
         $total_res = array();
         if ($res->num_rows > 0) {
@@ -780,7 +784,6 @@ and cc.company_id = $company_id
 
 
         $final = 0;
-
         if(!empty($total_res[0]['responded'])){
             $final =  round(($total_res[0]['responded']*100)/$total_res[0]['total'],2)."%";
         }

@@ -10,7 +10,7 @@ class Connection
 $servername = "localhost";
 $username = "root";
 $password = "";
-$dbname = "p-5169_new_app";
+$dbname = "new-app";
 
         $conn = new mysqli($servername, $username, $password, $dbname);
 

@@ -1,5 +1,7 @@
 <?php
 
+$company_id = !empty($_GET['company_id'])?$_GET['company_id']:"";
+
 ?>
 
 <!DOCTYPE html>
@@ -267,7 +269,16 @@
 						<ul class="nav navbar-nav navbar-right">
 							<li class=""><a href="javascript:;"
 								class="dropdown-toggle"  data-toggle="dropdown"
-								aria-expanded="false"> <img src="images/logo-nomad.png" style="width: 75%;" alt="">
+								aria-expanded="false">
+
+                <?php if(!empty($company_id) && $company_id==2): ?>
+                                <img src="https://www.eubank.kz/images/logo.png" style="width: 75%;" alt="">
+                <?php endif ?>
+
+
+                <?php if(!empty($company_id) && $company_id==5): ?>
+                                  <img src="images/logo-nomad.png" style="width: 75%;" alt="">
+                <?php endif ?>
 
 							</a>
 
@@ -328,6 +339,9 @@
 	<img src="../production/images/The_UserAlbum.com_social_network_logo.jpg" style="width: 25%;" />
 -->
 
+
+<?php if(!empty($company_id) && $company_id==5): ?>
+
 <h2 style="color: black; line-height: 1.3em;">
   Мы очень ценим Ваше мнение и в знак <br>
   благодарности хотим предложить Вам <br>
@@ -341,7 +355,15 @@
 
 <a href="https://nomadpolis.kz/dsosed/" class="btn" style="background: #e77716; color: #fff;">Подробнее</a>
 
+<?php endif ?>
 
+
+<?php if(!empty($company_id) && $company_id==2): ?>
+<!--  <h2 style="color: black; line-height: 1.3em;">
+      Спасибо за участие в опросе! <br>
+  </h2>
+-->
+<?php endif ?>
 
 
 						<!-- End SmartWizard Content -->

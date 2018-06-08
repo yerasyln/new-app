@@ -128,6 +128,22 @@ $gender = $getParam->gender;
 $filter.= " and cc.sex=" . $gender;
 }
 
+
+
+if(isset($getParam->product_id) && ! empty($getParam->product_id)){
+$product_id = $getParam->product_id;
+$filter.= " and cc.product_id=" . $product_id;
+}
+
+if(isset($getParam->stage_id) && ! empty($getParam->stage_id)){
+$stage_id = $getParam->stage_id;
+$filter.= " and cc.stage_id=" . $stage_id;
+}
+
+
+
+
+
     $sql = "select substr(l.created_at,1,10) as date,
 	COUNT(
         CASE WHEN poi.id = 3 AND l.answer >= 9 THEN poi.name
@@ -160,13 +176,13 @@ from log_simple_questions l
 left join clients_contact cc on cc.phone = l.phone_number
 left join point_of_interaction poi on poi.id = cc.point_of_interaction
 where
-cc.company_id = $company_id  
+cc.company_id = $company_id
 and
-date(l.created_at)>=date('$startDate') and date(l.created_at)<=date('$endDate') and l.question_quee=2 
+date(l.created_at)>=date('$startDate') and date(l.created_at)<=date('$endDate') and l.question_quee=2
 $filter
 group by substr(l.created_at,1,10)";
 
-//echo $sql; die;
+
 
 
 $result = $conn->query($sql);
@@ -185,8 +201,8 @@ if ($result->num_rows > 0) {
 
 		$nps1 = !empty($row['well_1'])? round(($row['well_1']-$row['bad_1'])*100/$total1,2):0;
 		$nps2 = !empty($row['well_2'])? round(($row['well_2']-$row['bad_2'])*100/$total2,2):0;
-		$nps3 = !empty($row['well_3'])? round(($row['well_3']-$row['bad_3'])*100/$total3,2):0;		
-		
+		$nps3 = !empty($row['well_3'])? round(($row['well_3']-$row['bad_3'])*100/$total3,2):0;
+
         $result_data_point[$key] = array(
             'date' => $date,
             'column-1' => (int) $nps1,

@@ -64,7 +64,7 @@ if (!$is_nps) {
 		from
 			log_simple_questions
 join (select distinct(clients_contact.phone),checktitle,clients_contact.sex,clients_contact.channel,clients_contact.point_of_interaction,clients_contact.avgcheck,
-    clients_contact.servicetime,clients_contact.product,clients_contact.duration_of_service,clients_contact.transactions,clients_contact.age, clients_contact.company_id from clients_contact ) cc_sub on
+    clients_contact.servicetime,clients_contact.product,clients_contact.duration_of_service,clients_contact.transactions,clients_contact.age, clients_contact.company_id, clients_contact.product_id, clients_contact.stage_id from clients_contact ) cc_sub on
 			cc_sub.phone = log_simple_questions.phone_number
 		where
 			answer <= 6
@@ -79,7 +79,7 @@ join (select distinct(clients_contact.phone),checktitle,clients_contact.sex,clie
 			log_simple_questions
 		join (select distinct(clients_contact.phone),checktitle,
     clients_contact.sex,clients_contact.channel,clients_contact.point_of_interaction,clients_contact.avgcheck,clients_contact.servicetime,
-    clients_contact.product,clients_contact.duration_of_service,clients_contact.transactions,clients_contact.age, clients_contact.company_id from clients_contact ) cc_sub on
+    clients_contact.product,clients_contact.duration_of_service,clients_contact.transactions,clients_contact.age, clients_contact.company_id, clients_contact.product_id, clients_contact.stage_id from clients_contact ) cc_sub on
 			cc_sub.phone = log_simple_questions.phone_number
 		where
 			answer between 7 and 8
@@ -93,7 +93,7 @@ join (select distinct(clients_contact.phone),checktitle,clients_contact.sex,clie
 		from
 			log_simple_questions
 		join (select distinct(clients_contact.phone),checktitle,clients_contact.sex,clients_contact.channel,clients_contact.point_of_interaction,
-    clients_contact.avgcheck,clients_contact.servicetime,clients_contact.product,clients_contact.duration_of_service,clients_contact.transactions,clients_contact.age, clients_contact.company_id from clients_contact ) cc_sub on
+    clients_contact.avgcheck,clients_contact.servicetime,clients_contact.product,clients_contact.duration_of_service,clients_contact.transactions,clients_contact.age, clients_contact.company_id, clients_contact.product_id, clients_contact.stage_id from clients_contact ) cc_sub on
 			cc_sub.phone = log_simple_questions.phone_number
 		where
 			answer >= 9
@@ -101,12 +101,12 @@ join (select distinct(clients_contact.phone),checktitle,clients_contact.sex,clie
       and cc_sub.company_id = $company_id
 			$filter_sub
 	) as well,
-	concat( round(((( select count( answer ) from log_simple_questions join (select distinct(clients_contact.phone),checktitle,clients_contact.sex,clients_contact.channel,clients_contact.point_of_interaction, clients_contact.avgcheck,clients_contact.servicetime,clients_contact.product,clients_contact.duration_of_service,clients_contact.transactions,clients_contact.age, clients_contact.company_id from clients_contact ) cc_sub on cc_sub.phone = log_simple_questions.phone_number where answer <= 6 and question_quee = 2   and cc_sub.company_id = $company_id  $filter_sub )* 100 )/count(main.answer)), 2 ), '' ) as bad_rate,
-	concat( round(((( select count( answer ) from log_simple_questions join (select distinct(clients_contact.phone),checktitle,clients_contact.sex,clients_contact.channel,clients_contact.point_of_interaction, clients_contact.avgcheck,clients_contact.servicetime,clients_contact.product,clients_contact.duration_of_service,clients_contact.transactions,clients_contact.age, clients_contact.company_id from clients_contact ) cc_sub on cc_sub.phone = log_simple_questions.phone_number where answer between 7 and 8 and question_quee = 2 and cc_sub.company_id = $company_id $filter_sub )* 100 )/count(main.answer)), 2 ), '' ) as good_rate,
-	concat( round(((( select count( answer ) from log_simple_questions join (select distinct(clients_contact.phone),checktitle,clients_contact.sex,clients_contact.channel,clients_contact.point_of_interaction, clients_contact.avgcheck,clients_contact.servicetime,clients_contact.product,clients_contact.duration_of_service,clients_contact.transactions,clients_contact.age, clients_contact.company_id from clients_contact ) cc_sub on cc_sub.phone = log_simple_questions.phone_number where answer >= 9 and question_quee = 2 and cc_sub.company_id = $company_id $filter_sub )* 100 )/count(main.answer)), 2 ), '' ) as well_rate
+	concat( round(((( select count( answer ) from log_simple_questions join (select distinct(clients_contact.phone),checktitle,clients_contact.sex,clients_contact.channel,clients_contact.point_of_interaction, clients_contact.avgcheck,clients_contact.servicetime,clients_contact.product,clients_contact.duration_of_service,clients_contact.transactions,clients_contact.age, clients_contact.company_id, clients_contact.product_id, clients_contact.stage_id from clients_contact ) cc_sub on cc_sub.phone = log_simple_questions.phone_number where answer <= 6 and question_quee = 2   and cc_sub.company_id = $company_id  $filter_sub )* 100 )/count(main.answer)), 2 ), '' ) as bad_rate,
+	concat( round(((( select count( answer ) from log_simple_questions join (select distinct(clients_contact.phone),checktitle,clients_contact.sex,clients_contact.channel,clients_contact.point_of_interaction, clients_contact.avgcheck,clients_contact.servicetime,clients_contact.product,clients_contact.duration_of_service,clients_contact.transactions,clients_contact.age, clients_contact.company_id, clients_contact.product_id, clients_contact.stage_id from clients_contact ) cc_sub on cc_sub.phone = log_simple_questions.phone_number where answer between 7 and 8 and question_quee = 2 and cc_sub.company_id = $company_id $filter_sub )* 100 )/count(main.answer)), 2 ), '' ) as good_rate,
+	concat( round(((( select count( answer ) from log_simple_questions join (select distinct(clients_contact.phone),checktitle,clients_contact.sex,clients_contact.channel,clients_contact.point_of_interaction, clients_contact.avgcheck,clients_contact.servicetime,clients_contact.product,clients_contact.duration_of_service,clients_contact.transactions,clients_contact.age, clients_contact.company_id, clients_contact.product_id, clients_contact.stage_id from clients_contact ) cc_sub on cc_sub.phone = log_simple_questions.phone_number where answer >= 9 and question_quee = 2 and cc_sub.company_id = $company_id $filter_sub )* 100 )/count(main.answer)), 2 ), '' ) as well_rate
 from
 	log_simple_questions main
-join (select distinct(clients_contact.phone),checktitle,clients_contact.sex,clients_contact.channel,clients_contact.point_of_interaction, clients_contact.avgcheck,clients_contact.servicetime,clients_contact.product,clients_contact.duration_of_service,clients_contact.transactions,clients_contact.age, clients_contact.company_id from clients_contact ) cc on
+join (select distinct(clients_contact.phone),checktitle,clients_contact.sex,clients_contact.channel,clients_contact.point_of_interaction, clients_contact.avgcheck,clients_contact.servicetime,clients_contact.product,clients_contact.duration_of_service,clients_contact.transactions,clients_contact.age, clients_contact.company_id, clients_contact.product_id, clients_contact.stage_id from clients_contact ) cc on
 	cc.phone = main.phone_number
 where
 	main.question_quee = 2 and  cc.company_id = $company_id
@@ -173,7 +173,7 @@ $sql = "SELECT
         `log_simple_questions` ll
 
  join (select distinct(clients_contact.phone),checktitle,clients_contact.sex,clients_contact.channel,clients_contact.point_of_interaction,
-    clients_contact.avgcheck,clients_contact.servicetime,clients_contact.product,clients_contact.duration_of_service,clients_contact.transactions,clients_contact.age, clients_contact.company_id from clients_contact ) cc on cc.phone = ll.phone_number
+    clients_contact.avgcheck,clients_contact.servicetime,clients_contact.product,clients_contact.duration_of_service,clients_contact.transactions,clients_contact.age, clients_contact.company_id, clients_contact.product_id, clients_contact.stage_id from clients_contact ) cc on cc.phone = ll.phone_number
 
     WHERE
         ll.question_id = main.id
@@ -320,15 +320,15 @@ $ConnectionDot = $filters->getDataForConnectionDot($lastWeek=false,$filter, $com
 $ConnectionDot_arr = array();
 
 if (!empty($ConnectionDot)) {
-	
-	
+
+
 
     foreach ($ConnectionDot as $data) {
 
-		if(!empty($data['total'])){		
+		if(!empty($data['total'])){
         $ConnectionDot_arr[$data['code']] = array('label' => $data['name'], 'rate' => round((($data['col'] * 100) / $data['total']), 2) . "%");
 		}else{
-		$ConnectionDot_arr[$data['code']] = array('label' => $data['name'], 'rate' =>  "0%");	
+		$ConnectionDot_arr[$data['code']] = array('label' => $data['name'], 'rate' =>  "0%");
 		}
     }
 }
@@ -338,16 +338,19 @@ if (!empty($ConnectionDot)) {
 //get common data
 
 //csat data
-$totalCSAT = $filters->getTotalCSAT($filter, $company_id);
+$totalCSAT = $filters->getTotalCSAT($filter, $company_id, $filter_sub);
 
 
 $totalCsat_is_down = false;
 
-/*if($totalCSAT['arif']>$totalCSAT['lastweek']){
-$totalCsat_is_down = true;	
+
+
+
+if($totalCSAT[0]['arif']>$totalCSAT[0]['lastweek']){
+$totalCsat_is_down = true;
 }else{
 $totalCsat_is_down = false;
-}*/
+}
 
 
 //nps data
@@ -365,9 +368,9 @@ $changeStatusForNPS = $totalNPS < $totalNPS_lastweek_query ? 1 : 0;
 
 
 // all asked people
-$Allaskedpeople = $filters->getAllASkedpeople($company_id);
+$Allaskedpeople = $filters->getAllASkedpeople($company_id, $filter);
 
-$Allaskedpeople_lastweek = $filters->getAllASkedpeople($company_id,1);
+$Allaskedpeople_lastweek = $filters->getAllASkedpeople($company_id,$filter,1);
 
 
 
@@ -376,9 +379,9 @@ $changeStatusForAllAsked = $Allaskedpeople<$Allaskedpeople_lastweek?1:0;
 
 // total respond rate
 
-$totalRespondrate = $filters->getTotalRespondRate($lastWeek = false,$filter, $company_id);
+$totalRespondrate = $filters->getTotalRespondRate($lastWeek = false,$filter,$filter_sub,  $company_id);
 
-$totalRespondrate_lastweek = $filters->getTotalRespondRate(1,$filter, $company_id);
+$totalRespondrate_lastweek = $filters->getTotalRespondRate(1,$filter,$filter_sub, $company_id);
 
 $changeStatusTotalRespondRate = $totalRespondrate<$totalRespondrate_lastweek?1:0;
 
@@ -395,27 +398,21 @@ $ConnectionDot_arr_lastweek = array();
 if (!empty($ConnectionDot_lastweek)) {
 
     foreach ($ConnectionDot_lastweek as $data) {
-		
+
 		if(!empty($data['col']) && !empty($data['total'])){
 			$ConnectionDot_arr_lastweek[$data['code']] = array('label' => $data['name'], 'rate' => round((($data['col'] * 100) / $data['total']), 2) . "%");
 		}else{
 			$ConnectionDot_arr_lastweek[$data['code']] = array('label' => $data['name'], 'rate' =>  "0%");
 		}
-		
-	
+
+
 	}
 }
 
-// call center week check
-// $changeStatuscall_center_nps = $call_center_nps['call-center']['rate']<$call_center_nps_last_week['call-center']['rate']?1:0;
 
 
-// //office week check
-// $changeStatuscall_office = $office_nps['office']['rate']<$office_nps_last_week['office']['rate']?1:0;
 
 
-// //help desk week check
-// $changeStatushelp_desk_nps = $help_desk_nps['help_desk']['rate']<$help_desk_nps_last_week['help_desk']['rate']?1:0;
 
 
 
@@ -450,19 +447,22 @@ if($res){
 				select
 					distinct(clients_contact.phone),
 					clients_contact.company_id,
-					clients_contact.point_of_interaction
+					clients_contact.point_of_interaction,
+          clients_contact.product_id,
+          clients_contact.stage_id
 				from
 					clients_contact
-			) cc on
-			cc.phone = phone_number
+			) cc_sub on
+			cc_sub.phone = phone_number
 		join company on
-			company.id = cc.company_id
-			join point_of_interaction poi on poi.id =  cc.point_of_interaction
+			company.id = cc_sub.company_id
+			join point_of_interaction poi on poi.id =  cc_sub.point_of_interaction
 		where
-			cc.company_id = $company_id
+			cc_sub.company_id = $company_id
 			and answer <= 6
 			and poi.id = poi_main.id
 			and log_simple_questions.question_quee = 2
+      $filter_sub
 	) as bad,
 	(
 		select
@@ -473,19 +473,22 @@ if($res){
 				select
 					distinct(clients_contact.phone),
 					clients_contact.company_id,
-					clients_contact.point_of_interaction
+					clients_contact.point_of_interaction,
+          clients_contact.product_id,
+          clients_contact.stage_id
 				from
 					clients_contact
-			) cc on
-			cc.phone = phone_number
+			) cc_sub on
+			cc_sub.phone = phone_number
 		join company on
-			company.id = cc.company_id
-			join point_of_interaction poi on poi.id =  cc.point_of_interaction
+			company.id = cc_sub.company_id
+			join point_of_interaction poi on poi.id =  cc_sub.point_of_interaction
 		where
-			cc.company_id = $company_id
+			cc_sub.company_id = $company_id
 			and answer >= 9
 			and poi.id = poi_main.id
 			and log_simple_questions.question_quee = 2
+      $filter_sub
 	) as well,
 	poi_main.name
 from
@@ -494,7 +497,9 @@ join(
 		select
 			distinct(clients_contact.phone),
 			clients_contact.company_id,
-			clients_contact.point_of_interaction
+			clients_contact.point_of_interaction,
+      clients_contact.product_id,
+      clients_contact.stage_id
 		from
 			clients_contact
 	) cc on
@@ -503,9 +508,17 @@ join company on
 	company.id = cc.company_id
 join point_of_interaction poi_main on poi_main.id =  cc.point_of_interaction
 where
+
 	cc.company_id = $company_id
 	and main.question_quee = 2
-	and poi_main.code='office'" ;
+	and poi_main.code='office'
+
+  $filter
+  "
+
+  ;
+
+
 
     $CountForQuestion = $conn->query($sql_count_for_per_questions);
 $office_nps = array();
@@ -518,11 +531,11 @@ $office_nps = array();
 
         }
     }
-	
-	
+
+
 	///last week
-	
-	
+
+
 	 $sql_count_for_per_questions = "select
 	count( main.answer ) as total,
 	(
@@ -534,7 +547,9 @@ $office_nps = array();
 				select
 					distinct(clients_contact.phone),
 					clients_contact.company_id,
-					clients_contact.point_of_interaction
+					clients_contact.point_of_interaction,
+          clients_contact.product_id,
+          clients_contact.stage_id
 				from
 					clients_contact
 			) cc on
@@ -558,7 +573,8 @@ $office_nps = array();
 				select
 					distinct(clients_contact.phone),
 					clients_contact.company_id,
-					clients_contact.point_of_interaction
+					clients_contact.point_of_interaction,
+          clients_contact.product_id, clients_contact.stage_id
 				from
 					clients_contact
 			) cc on
@@ -580,7 +596,8 @@ join(
 		select
 			distinct(clients_contact.phone),
 			clients_contact.company_id,
-			clients_contact.point_of_interaction
+			clients_contact.point_of_interaction,
+      clients_contact.product_id, clients_contact.stage_id
 		from
 			clients_contact
 	) cc on
@@ -595,7 +612,7 @@ where
 		current_date - 7) " ;
 
 		//echo $sql_count_for_per_questions; die;
-		
+
     $CountForQuestion = $conn->query($sql_count_for_per_questions);
 $office_nps_last_week = array();
     if ($CountForQuestion->num_rows > 0) {
@@ -609,6 +626,13 @@ $office_nps_last_week = array();
     }
 
 
+
+//echo "<pre>"; print_r($office_nps_last_week ); die;
+    //office week check
+    if(empty($office_nps_last_week['office']['rate'])) $office_nps_last_week['office']['rate']=0;
+    if(empty($office_nps['office']['rate'])) $office_nps['office']['rate']=0;
+
+    $changeStatuscall_office = $office_nps['office']['rate']<$office_nps_last_week['office']['rate']?1:0;
 
 ///call center nps
 
@@ -624,19 +648,22 @@ join(
     select
       distinct(clients_contact.phone),
       clients_contact.company_id,
-      clients_contact.point_of_interaction
+      clients_contact.point_of_interaction,
+      clients_contact.product_id,
+      clients_contact.stage_id
     from
       clients_contact
-  ) cc on
-  cc.phone = phone_number
+  ) cc_sub on
+  cc_sub.phone = phone_number
 join company on
-  company.id = cc.company_id
-  join point_of_interaction poi on poi.id =  cc.point_of_interaction
+  company.id = cc_sub.company_id
+  join point_of_interaction poi on poi.id =  cc_sub.point_of_interaction
 where
-  cc.company_id = $company_id
+  cc_sub.company_id = $company_id
   and answer <= 6
   and poi.id = poi_main.id
   and log_simple_questions.question_quee = 2
+  $filter_sub
 ) as bad,
 (
 select
@@ -647,19 +674,22 @@ join(
     select
       distinct(clients_contact.phone),
       clients_contact.company_id,
-      clients_contact.point_of_interaction
+      clients_contact.point_of_interaction,
+      clients_contact.product_id,
+      clients_contact.stage_id
     from
       clients_contact
-  ) cc on
-  cc.phone = phone_number
+  ) cc_sub on
+  cc_sub.phone = phone_number
 join company on
-  company.id = cc.company_id
-  join point_of_interaction poi on poi.id =  cc.point_of_interaction
+  company.id = cc_sub.company_id
+  join point_of_interaction poi on poi.id =  cc_sub.point_of_interaction
 where
-  cc.company_id = $company_id
+  cc_sub.company_id = $company_id
   and answer >= 9
   and poi.id = poi_main.id
   and log_simple_questions.question_quee = 2
+  $filter_sub
 ) as well,
 poi_main.name
 from
@@ -668,7 +698,9 @@ join(
 select
   distinct(clients_contact.phone),
   clients_contact.company_id,
-  clients_contact.point_of_interaction
+  clients_contact.point_of_interaction,
+  clients_contact.product_id,
+  clients_contact.stage_id
 from
   clients_contact
 ) cc on
@@ -679,7 +711,11 @@ join point_of_interaction poi_main on poi_main.id =  cc.point_of_interaction
 where
 cc.company_id = $company_id
 and main.question_quee = 2
-and poi_main.code='call-center'" ;
+and poi_main.code='call-center'
+$filter
+" ;
+
+
 
 $CountForQuestion = $conn->query($sql_count_for_per_questions_call_center);
 $call_center_nps = array();
@@ -691,6 +727,8 @@ if ($CountForQuestion->num_rows > 0) {
       }
     }
 }
+
+
 
 
 
@@ -723,7 +761,7 @@ where
   and poi.id = poi_main.id
   and log_simple_questions.question_quee = 2 and date( log_simple_questions.created_at )<= date(
 		current_date - 7
-	) 
+	)
 ) as bad,
 (
 select
@@ -748,7 +786,7 @@ where
   and poi.id = poi_main.id
   and log_simple_questions.question_quee = 2  and date( log_simple_questions.created_at )<= date(
 		current_date - 7
-	) 
+	)
 ) as well,
 poi_main.name
 from
@@ -772,7 +810,7 @@ and poi_main.code='call-center'
 
 and date( main.created_at )<= date(
 		current_date - 7
-	) 
+	)
 
 " ;
 
@@ -792,6 +830,12 @@ if ($CountForQuestion->num_rows > 0) {
 
 
 
+if(empty($call_center_nps['call-center']['rate'])) $call_center_nps['call-center']['rate']=0;
+
+if(empty($call_center_nps_last_week['call-center']['rate'])) $call_center_nps_last_week['call-center']['rate']=0;
+
+// call center week check
+$changeStatuscall_center_nps = $call_center_nps['call-center']['rate']<$call_center_nps_last_week['call-center']['rate']?1:0;
 
 
 
@@ -809,19 +853,22 @@ join(
     select
       distinct(clients_contact.phone),
       clients_contact.company_id,
-      clients_contact.point_of_interaction
+      clients_contact.point_of_interaction,
+      clients_contact.product_id,
+      clients_contact.stage_id
     from
       clients_contact
-  ) cc on
-  cc.phone = phone_number
+  ) cc_sub on
+  cc_sub.phone = phone_number
 join company on
-  company.id = cc.company_id
-  join point_of_interaction poi on poi.id =  cc.point_of_interaction
+  company.id = cc_sub.company_id
+  join point_of_interaction poi on poi.id =  cc_sub.point_of_interaction
 where
-  cc.company_id = $company_id
+  cc_sub.company_id = $company_id
   and answer <= 6
   and poi.id = poi_main.id
   and log_simple_questions.question_quee = 2
+  $filter_sub
 ) as bad,
 (
 select
@@ -832,19 +879,22 @@ join(
     select
       distinct(clients_contact.phone),
       clients_contact.company_id,
-      clients_contact.point_of_interaction
+      clients_contact.point_of_interaction,
+      clients_contact.product_id,
+      clients_contact.stage_id
     from
       clients_contact
-  ) cc on
-  cc.phone = phone_number
+  ) cc_sub on
+  cc_sub.phone = phone_number
 join company on
-  company.id = cc.company_id
-  join point_of_interaction poi on poi.id =  cc.point_of_interaction
+  company.id = cc_sub.company_id
+  join point_of_interaction poi on poi.id =  cc_sub.point_of_interaction
 where
-  cc.company_id = $company_id
+  cc_sub.company_id = $company_id
   and answer >= 9
   and poi.id = poi_main.id
   and log_simple_questions.question_quee = 2
+  $filter_sub
 ) as well,
 poi_main.name
 from
@@ -853,7 +903,9 @@ join(
 select
   distinct(clients_contact.phone),
   clients_contact.company_id,
-  clients_contact.point_of_interaction
+  clients_contact.point_of_interaction,
+  clients_contact.product_id,
+  clients_contact.stage_id
 from
   clients_contact
 ) cc on
@@ -864,7 +916,12 @@ join point_of_interaction poi_main on poi_main.id =  cc.point_of_interaction
 where
 cc.company_id = $company_id
 and main.question_quee = 2
-and poi_main.code='help_desk'" ;
+and poi_main.code='help_desk'
+$filter
+" ;
+
+
+
 
 $CountForQuestion = $conn->query($sql_count_for_per_questions_help_desk);
 $help_desk_nps = array();
@@ -906,7 +963,7 @@ where
   and poi.id = poi_main.id
   and log_simple_questions.question_quee = 2 and date( log_simple_questions.created_at )<= date(
 		current_date - 7
-	) 
+	)
 ) as bad,
 (
 select
@@ -929,12 +986,12 @@ where
   cc.company_id = $company_id
   and answer >= 9
   and poi.id = poi_main.id
-  and log_simple_questions.question_quee = 2   
-  
+  and log_simple_questions.question_quee = 2
+
   and date( log_simple_questions.created_at )<= date(
 		current_date - 7
-	) 
-  
+	)
+
 ) as well,
 poi_main.name
 from
@@ -958,7 +1015,7 @@ and poi_main.code='help_desk'
 
 and date( main.created_at )<= date(
 		current_date - 7
-	) 
+	)
 
 " ;
 
@@ -972,6 +1029,29 @@ if ($CountForQuestion->num_rows > 0) {
       }
     }
 }
+
+
+
+
+if(empty($help_desk_nps['help_desk']['rate'])) $help_desk_nps['help_desk']['rate']=0;
+
+if(empty($help_desk_nps_last_week['help_desk']['rate'])) $help_desk_nps_last_week['help_desk']['rate']=0;
+
+//help desk week check
+$changeStatushelp_desk_nps = $help_desk_nps['help_desk']['rate']<$help_desk_nps_last_week['help_desk']['rate']?1:0;
+
+//product and stage url
+
+$url="";
+if(isset($_GET['product_id']) && !empty($_GET['product_id'])){
+$url.="&product_id=".$_GET['product_id'];
+}
+
+if(isset($_GET['stage_id']) && !empty($_GET['stage_id'])){
+$url.="&stage_id=".$_GET['stage_id'];
+}
+
+
 
 
 //die;

@@ -29,12 +29,12 @@ if (isset($_GET['question'])) {
     aa.title as label ,
 	  count( main.answer ) as value,
     concat(round((count( main.answer )/(select count(*) from log_simple_questions ll
-    join (select distinct(clients_contact.phone), clients_contact.company_id  from clients_contact) cc_sub on
+    join (select distinct(clients_contact.phone), clients_contact.company_id, product_id, stage_id  from clients_contact) cc_sub on
     cc_sub.phone = ll.phone_number
-    where cc_sub.company_id = $company_id and  ll.question_quee = main.question_quee) * 100),2),'%') as rate
+    where cc_sub.company_id = $company_id and  ll.question_quee = main.question_quee $filter_sub ) * 100),2),'%') as rate
 from
 	log_simple_questions main
-  join (select distinct(clients_contact.phone), clients_contact.company_id  from clients_contact) cc on
+  join (select distinct(clients_contact.phone), clients_contact.company_id, product_id, stage_id  from clients_contact) cc on
   cc.phone = main.phone_number
 join answers_options aa on
 	aa.question_id = main.question_id
@@ -43,9 +43,13 @@ where
   cc.company_id = $company_id
   and
 	main.question_quee = $question_id
+
+  $filter
 group by
 	aa.title
  " ;
+
+
 
     $result = $conn->query($sql_simple_questions);
 
@@ -59,7 +63,7 @@ if(!empty($result)){
 
         }
     } else {
-      //  echo "0 results"; 
+      //  echo "0 results";
     }
   }
 

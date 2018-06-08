@@ -117,7 +117,9 @@ require 'php/general.php';
 
 
 
+            <div id="getData"><?php !empty($_GET)?$_GET:""
 
+                                ?>	</div>
 
 		<div class="clearfix"></div>
 
@@ -303,6 +305,8 @@ var percentage_response_rate = <?php echo  json_encode( $percentage_response_rat
 
 
 <script>
+ var getData = <?php echo json_encode($_GET); ?>;
+
 var getData = <?php echo json_encode($_GET); ?>;
 var res_channel_arr_call_center_year = <?php echo  json_encode($res_channel_arr_call_center_year)  ?>;
 var res_channel_arr_help_desk_year = <?php echo  json_encode($res_channel_arr_help_desk_year)  ?>;

@@ -222,7 +222,7 @@ require 'php/areaAmcharts.php';
 </div>
 <!-- Filtr end-->
 
-            <div class="col-md-15 col-sm-3">
+            <div class="col-md-3 col-sm-3">
                 <div class="tile-stats">
                     <div class="icon">
                         <i class="fa fa-comments-o"></i>
@@ -241,21 +241,8 @@ require 'php/areaAmcharts.php';
 
                 </div>
             </div>
-            <div class="col-md-15 col-sm-3 ">
-                <div class="tile-stats">
-                    <div class="icon">
-                        <i class="fa fa-comments-o"></i>
-                    </div>
-                    <div class="count"><?php echo  !empty($total_question[2]['col_count'])? $total_question[2]['col_count']:"0"; ?></div>
-                    <p>
-					<?php if(!empty($total_question[2]['col_count'])): ?>
-                        <a href="../production/questionDetail.php?question=2"  target="_blank" ><b>(<?php echo !empty($total_question[2]['title'])? $total_question[2]['title']:""; ?>)</b></a>
-                     <?php endif; ?>
-					</p>
-
-                </div>
-            </div>
-            <div class="col-md-15 col-sm-3 ">
+            
+            <div class="col-md-3 col-sm-3">
                 <div class="tile-stats">
                     <div class="icon">
                         <i class="fa fa-comments-o"></i>
@@ -269,7 +256,7 @@ require 'php/areaAmcharts.php';
 
                 </div>
             </div>
-            <div class="col-md-15 col-sm-3 ">
+            <div class="col-md-3 col-sm-3 ">
                 <div class="tile-stats">
                     <div class="icon">
                         <i class="fa fa-comments-o"></i>
@@ -284,7 +271,7 @@ require 'php/areaAmcharts.php';
                 </div>
             </div>
 
-            <div class="col-md-15 col-sm-3 ">
+            <div class="col-md-3 col-sm-3">
                 <div class="tile-stats">
                     <div class="icon">
                         <i class="fa fa-comments-o"></i>

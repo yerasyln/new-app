@@ -56,6 +56,7 @@ where
  ";
 
 
+
    $bar_data = $conn->query($sql);
 
     $bar_very_bad_arr=array();
@@ -177,8 +178,12 @@ select
 			count(phone_number)
 		from
 			log_send_sms
-      join (select distinct(clients_contact.phone), clients_contact.company_id   from clients_contact ) cc on cc.phone = phone_number
+      join (select distinct(clients_contact.phone), clients_contact.company_id,
+      clients_contact.product_id,
+      clients_contact.stage_id
+        from clients_contact ) cc on cc.phone = phone_number
       where cc.company_id = $company_id
+      $filter
 	) as not_responde,
 
 	round(sum(answer)/count(answer),2) as arif,
@@ -186,11 +191,14 @@ select
 
 from
 	log_simple_questions
-	 join (select distinct(clients_contact.phone), clients_contact.company_id   from clients_contact ) cc on cc.phone = phone_number
+	 join (select distinct(clients_contact.phone), clients_contact.company_id,   clients_contact.product_id,
+     clients_contact.stage_id   from clients_contact ) cc on cc.phone = phone_number
 where
   cc.company_id = $company_id
   and
 	question_quee =$question_quee
+
+  $filter
 	";
 
 
@@ -228,10 +236,11 @@ select
 			count(phone_number)
 		from
 			log_send_sms
-      join (select distinct(clients_contact.phone) ,point_of_interaction, company_id from clients_contact ) cc on
+      join (select distinct(clients_contact.phone) ,point_of_interaction, company_id, product_id, stage_id from clients_contact ) cc on
       	cc.phone = log_send_sms.phone_number
         where
           cc.company_id = $company_id
+          $filter
 	) as not_responde,
 
 	sum( main.answer ),
@@ -240,7 +249,7 @@ select
 
 from
 	log_simple_questions main
-join (select distinct(clients_contact.phone) ,point_of_interaction, company_id from clients_contact ) cc on
+join (select distinct(clients_contact.phone) ,point_of_interaction, company_id, product_id, stage_id from clients_contact ) cc on
 	cc.phone = main.phone_number
 join point_of_interaction poi on
 	poi.id = cc.point_of_interaction
@@ -256,6 +265,7 @@ where
 		where
 			code = 'help_desk'
 	)
+  $filter
 
 ";
 
@@ -290,9 +300,10 @@ select
 			count(phone_number)
 		from
 			log_send_sms
-      join (select distinct(clients_contact.phone) ,point_of_interaction, company_id from clients_contact ) cc on
+      join (select distinct(clients_contact.phone) ,point_of_interaction, company_id, product_id,stage_id from clients_contact ) cc on
       	cc.phone = log_send_sms.phone_number
       where cc.company_id = $company_id
+      $filter
 	) as not_responde,
 
 	sum( main.answer ),
@@ -301,7 +312,7 @@ select
 
 from
 	log_simple_questions main
-join (select distinct(clients_contact.phone) ,point_of_interaction, company_id from clients_contact ) cc on
+join (select distinct(clients_contact.phone) ,point_of_interaction, company_id, product_id, stage_id from clients_contact ) cc on
 	cc.phone = main.phone_number
 join point_of_interaction poi on
 	poi.id = cc.point_of_interaction
@@ -317,6 +328,7 @@ where
 		where
 			code = 'call-center'
 	)
+  $filter
 	";
 
    //echo $sql_sred_call_center; die;
@@ -354,16 +366,16 @@ select
 			count(phone_number)
 		from
 			log_send_sms
-      join (select distinct(clients_contact.phone) ,point_of_interaction, company_id from clients_contact ) cc on
+      join (select distinct(clients_contact.phone) ,point_of_interaction, company_id, product_id, stage_id from clients_contact ) cc on
       	cc.phone = log_send_sms.phone_number
-where cc.company_id = $company_id
+where cc.company_id = $company_id $filter
 	) as not_responde,
 	sum( main.answer ),
 	round( sum( main.answer )/ count( main.answer ), 2 ) as arif,
 	count( main.answer ) as col
 from
 	log_simple_questions main
-join (select distinct(clients_contact.phone) ,point_of_interaction, company_id from clients_contact ) cc on
+join (select distinct(clients_contact.phone) ,point_of_interaction, company_id, product_id, stage_id from clients_contact ) cc on
 	cc.phone = main.phone_number
 join point_of_interaction poi on
 	poi.id = cc.point_of_interaction
@@ -379,6 +391,7 @@ where
 		where
 			code = 'office'
 	)
+  $filter
 	";
 
    //echo $sql_sred_office; die;
@@ -439,7 +452,7 @@ where
    }
 
    $response_rate->close();
-   $conn->next_result();
+
 
    $sql_getQuestioin = "select
 
@@ -492,7 +505,9 @@ order by
 		join(
 				select
 					distinct(clients_contact.phone),
-					company_id
+					company_id,
+          product_id,
+          stage_id
 				from
 					clients_contact
 			) cc on
@@ -504,6 +519,7 @@ order by
 			cc.company_id = $company_id
 			and log_simple_questions.question_quee = $question_quee
 			and ao.id = answers_options.id
+      $filter
 	) as counter,
 	(
 		select
@@ -513,7 +529,9 @@ order by
 		join(
 				select
 					distinct(clients_contact.phone),
-					company_id
+					company_id,
+          product_id,
+          stage_id
 				from
 					clients_contact
 			) cc on
@@ -521,6 +539,7 @@ order by
 		where
 			cc.company_id = $company_id
 			and log_simple_questions.question_quee = $question_quee
+      $filter
 	) total
 from
 	answers_options
@@ -534,6 +553,9 @@ where
 			simple_questions.company_id = $company_id
 			and simple_questions.code = $question_quee
 	)";
+
+
+
 
       $result = $conn->query($sql_get_answers_options);
 
@@ -558,7 +580,7 @@ where
         }
       }
 
-      
+
 
 }
 
@@ -567,8 +589,24 @@ where
 
 if(!empty($_POST['start']) && !empty($_POST['end'])){
 
+  $getParam = !empty($_POST['getParam'])? json_decode($_POST['getParam']):"";
+
+
     $start = $_POST['start'];
     $end = $_POST['end'];
+
+    $filter = "";
+    if(!empty($getParam->product_id)){
+        $filter = " and cc.product_id = ". $getParam->product_id;
+    }
+
+    if(!empty($getParam->stage_id)){
+        $filter.= " and cc.stage_id = ". $getParam->stage_id;
+    }
+
+
+
+
 
   $sql="select
 	date(main.created_at) date,
@@ -577,7 +615,7 @@ if(!empty($_POST['start']) && !empty($_POST['end'])){
 	count( case when p.code = 'office' then p.name end ) as 'column-3'
 from
 	log_simple_questions main
-join (select distinct(clients_contact.phone) ,point_of_interaction, company_id from clients_contact ) cc on
+join (select distinct(clients_contact.phone) ,point_of_interaction, company_id, product_id, stage_id from clients_contact ) cc on
 	cc.phone = main.phone_number
 join point_of_interaction p on
 	p.id = cc.point_of_interaction
@@ -587,14 +625,16 @@ where
 	main.question_quee = 1
 	and date(main.created_at)>= date('$start')
 	and date(main.created_at)<= date('$end')
+
+  $filter
 group by
 	date(main.created_at)
 order by
 	date(main.created_at)
 	";
 
-//echo $sql; die;
 
+// print_r($sql); die();
 
     $result = $conn->query($sql);
 

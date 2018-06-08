@@ -242,7 +242,7 @@ require 'php/general.php';
 
 						<div id="chart_nps_response_rate" style="height: 350px;"></div>
 
-						<div id="chart_nps_response_rate_export"></div>
+						<div id="chart_nps_response_rate_export" style="display: none;"></div>
 
 					</div>
 				</div>

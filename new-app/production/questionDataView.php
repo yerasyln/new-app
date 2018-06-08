@@ -89,7 +89,7 @@ require 'php/general.php';
              		<table class="table">
              		<tr>
              		<?php foreach($result_answers as $bar_data): ?>
-             			<!-- <th><?php echo $bar_data['label'];  ?></th> -->
+             			<th><?php echo $bar_data['label'];  ?></th>
              		<?php endforeach; ?>
              		</tr>
              		<tr>

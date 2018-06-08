@@ -119,3 +119,19 @@ $gender = $_GET['gender'];
 $filter.= " and cc.sex=" . $gender;
 $filter_sub.= "and cc_sub.sex = coalesce(cc.sex,0)";
 }
+
+$product_id=0;
+if(isset($_GET['product_id']) && !empty($_GET['product_id'])){
+$product_id = $_GET['product_id'];
+$filter.= " and cc.product_id=" . $product_id;
+$filter_sub.= "and cc_sub.product_id = coalesce(cc.product_id,0)";
+}
+
+
+
+$stage_id=0;
+if(isset($_GET['stage_id']) && !empty($_GET['stage_id'])){
+$stage_id = $_GET['stage_id'];
+$filter.= " and cc.stage_id=" . $stage_id;
+$filter_sub.= "and cc_sub.stage_id = coalesce(cc.stage_id,0)";
+}

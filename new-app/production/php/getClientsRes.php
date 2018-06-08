@@ -59,7 +59,7 @@ where
 
   where clients_contact.company_id = $company_id
 
-  order by log_simple_questions.phone_number, 	log_simple_questions.question_quee
+  order by log_simple_questions.phone_number, log_simple_questions.question_quee, log_simple_questions.created_at
 ");
  $result_data = array();
 

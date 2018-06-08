@@ -1,34 +1,32 @@
 <?php
 
-	if(!isset($_SESSION))
-	   {
-	       session_start();
-	   }
+if(!isset($_SESSION))
+   {
+       session_start();
+   }
 
-	require 'php/getQuestions.php';
-	require 'php/getChatData.php';
-	require 'php/getData.php';
-	if (! isset($_SESSION['user_id'])) {
-	     header('Location: login.php');
-	}
-	$user_id = $_SESSION['user_id'];
+require 'php/getQuestions.php';
+require 'php/getChatData.php';
+require 'php/getData.php';
+if (! isset($_SESSION['user_id'])) {
+     header('Location: login.php');
+}
+$user_id = $_SESSION['user_id'];
 
+$sqlUsers = "select * from users where id = $user_id";
+$resultUsers = $conn->query($sqlUsers);
+$resultUsersData = array();
+if ($resultUsers->num_rows > 0) {
 
-	$sqlUsers = "select * from users where id = $user_id";
-	$resultUsers = $conn->query($sqlUsers);
-	$resultUsersData = array();
+    while ($row = $resultUsers->fetch_assoc()) {
+        // echo "<pre>"; print_r($row);
+    $resultUsersData[$row['id']] = $row;
+				}
 
-	if ($resultUsers->num_rows > 0) {
-
-	    while ($row = $resultUsers->fetch_assoc()) {
-	        // echo "<pre>"; print_r($row);
-	    $resultUsersData[$row['id']] = $row;
-					}
-
-	} else {
-	   //echo "0 results";
-	}
-	$company_id ;
+} else {
+   //echo "0 results";
+}
+$company_id ;
 	foreach ($resultUsersData as $UsersData){
 	    $id = $UsersData['id'];
 	     $firstname = $UsersData['firstname'];
@@ -38,7 +36,7 @@
 	     $company_id = $UsersData['company_id'];
 
 	}
-	$sqlProducts = "select * from product where company_id =".$company_id;
+	$sqlProducts = "SELECT * from product where company_id =".$company_id;
 	$resultProducts = $conn -> query($sqlProducts);
 	$resultProductData = array();
 	if($resultProducts ->num_rows > 0){
@@ -46,9 +44,7 @@
 			$resultProductData[$row['id']]=$row;
 		}
 	}
-	
-
-	$sqlProductStages = "
+		$sqlProductStages = "
 SELECT product_stages.id,product_stages.name,product_stages.code,product_stages.product_id FROM product INNER JOIN product_stages ON product.id = product_stages.product_id";
 	$resultsProductStages = $conn -> query($sqlProductStages);
 	$resultsProductStageData = array();
@@ -68,8 +64,8 @@ SELECT product_stages.id,product_stages.name,product_stages.code,product_stages.
 	}
 
 
+	
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -79,10 +75,12 @@ SELECT product_stages.id,product_stages.name,product_stages.code,product_stages.
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+
 <title> DMS survey platform</title>
 <link rel="icon" type="image/png" href="images/LogoDMS.png"/>
 <!-- Bootstrap-4 -->
 <!--<link href="../vendors/bootstrap-4/css/bootstrap.min.css" rel="stylesheet"> -->
+
 
 
 <link
@@ -136,7 +134,6 @@ SELECT product_stages.id,product_stages.name,product_stages.code,product_stages.
 <!--<script src="/gentelella/src/js/lineChart3.js"></script>-->
 <script src="../vendors/jquery/dist/jquery.min.js"></script>
 
-<script >$("#products1 ul").append('<li><a href="/user/messages"><span class="tab">Message Center</span></a></li>');</script>
 <style>
 #chartdiv {
 	width: 100%;
@@ -227,43 +224,44 @@ SELECT product_stages.id,product_stages.name,product_stages.code,product_stages.
 
 
 										<li><a href="response.php">Результаты опросов</a></li>
-
-											</ul>
-										</li>
-								<li><a><i class="products fa fa-table"></i>Продукты<span
+										<!--<li><a href="index3.html">Dashboard3</a></li>-->
+									</ul></li>
+									<li><a><i class="products fa "></i>Продукты<span
 								class="fa fa-chevron-down"></span></a>
-									<ul id = "products1" class="nav child_menu">
+									<ul class="nav child_menu" id = "products1" >
 										<?php 
+											
 										foreach ($resultProductData as $productData) {
 												echo ("<script> 
 													var newLi = document.createElement('li');
 													newLi.setAttribute('id','products2');
-							  						newLi.innerHTML = '<a><i>$productData[name]</i></a>';
+													newLi.setAttribute('class','current-page');
+							  						newLi.innerHTML = '<a >$productData[name]</a>';
 							  						products1.appendChild(newLi); 
 							  						");
 												
 												foreach ($resultsProductStageData as $productStageData) {
 													if($productData['id'] == $productStageData['product_id']){
 														echo (" var newLi2 = document.createElement('a');
-															 	  	newLi2.innerHTML = '<li><a><i>$productStageData[name]</i></a></li>';
+
+															 	  	newLi2.innerHTML = '<li><a href = \"index.php?product_id=$productData[id]&stage_id=$productStageData[id] \" >$productStageData[name]</a></li>';
 															 	  	products2.appendChild(newLi2);
 															 	  	");
 															}
+															
 												}
 
-												echo "newLi.setAttribute('id',newLi.getAttribute('id')+'1');</script>";
+												echo "newLi.setAttribute('id',newLi.getAttribute('id')+'1');
+												</script>";
 							  						
-							  				} ?>
+							  			 	} 
+							  				
+							  				?>
 										
 										
-										
-											
+											</ul>
+												
 										</li>
-										<!--<li><a href="index3.html">Dashboard3</a></li>-->
-									</ul></li>
-									
-									  
-									</script>
 
 
 

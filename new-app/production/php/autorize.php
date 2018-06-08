@@ -24,10 +24,10 @@ require 'db.php';
 //if($role_id==1){
 //header("Location: /administrator/production/index.php");
 //}else{
-header("Location: /new-app/production/index.php");
+header("Location: /gentelella/production/index.php");
 //}
              }else{
-                    header("Location: /new-app/production/login.php?error=1");
+                    header("Location: /gentelella/production/login.php?error=1");
              }
 $_SESSION = array(
    'user_id'=>$user_id,
